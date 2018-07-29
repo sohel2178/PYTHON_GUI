@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QPushButton" name="btn_add_subject">
+  <widget class="QPushButton" name="btn_add_teacher">
    <property name="geometry">
     <rect>
      <x>720</x>
@@ -36,7 +36,7 @@ border-radius:6;
 }</string>
    </property>
    <property name="text">
-    <string>Add Subject</string>
+    <string>Add Teacher</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -60,7 +60,7 @@ border-radius:6;
 background-color: rgb(56, 56, 56);</string>
    </property>
    <property name="text">
-    <string>Subject List</string>
+    <string>Teachers List</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
@@ -92,7 +92,7 @@ background-color: rgb(56, 56, 56);</string>
   </widget>
   <zorder>label</zorder>
   <zorder>line</zorder>
-  <zorder>btn_add_subject</zorder>
+  <zorder>btn_add_teacher</zorder>
   <zorder>verticalLayoutWidget</zorder>
  </widget>
  <resources/>

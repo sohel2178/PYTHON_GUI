@@ -48,8 +48,9 @@ class Teacher(Base):
     race = Column(String(50))
     gender = Column(Integer)
     email = Column(String(50))
+    image = Column(String(50),unique=True)
     work_phone = Column(Integer)
-    cell_phone = Column(Integer)
+    cell_phone = Column(String(20))
     subjects = relationship("Subject",back_populates='teacher')
 
     def __repr__(self):
@@ -82,6 +83,7 @@ class Student(Base):
     email = Column(String(50))
     registration_date = Column(DateTime)
     race = Column(String(20))
+    image = Column(String(20),unique=True)
     gender = Column(String(20))
     home_telephone = Column(String(50))
     cell_phone = Column(String(50))
@@ -172,8 +174,20 @@ class DataBase():
 
     # Teacher Section
     def add_teacher(self,teacher):
-        self.session.add(teacher)
-        self.session.commit()
+        try:
+            self.session.add(teacher)
+            self.session.flush()
+            id = teacher.id
+            x = self.session.query(Teacher).filter_by(id=id).first()
+            y="Teacher Added Successfully"
+            self.session.commit()
+
+        except:
+            x=None
+            y = "Unique Costraint Failed. Same Entry Already in Database"
+            self.session.rollback()
+
+        return x,y
 
     def get_all_teacher(self):
         return self.session.query(Teacher).order_by(Teacher.id).all()

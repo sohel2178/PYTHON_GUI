@@ -5,6 +5,7 @@ from PyQt5.uic import loadUi
 import os
 from schoolmanagement.pkgcourse import coursewindow
 from schoolmanagement.pkgsubjects import subjectwindow
+from schoolmanagement.pkgteachers import teacherwindow
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -16,10 +17,12 @@ class MainWindow(QMainWindow):
 
         self.courseWindow = coursewindow()
         self.subjectWindow = subjectwindow()
+        self.teacherWindow = teacherwindow()
 
         self.stackedWidget.addWidget(self.courseWindow)
         self.stackedWidget.addWidget(self.subjectWindow)
-        self.stackedWidget.setCurrentWidget(self.courseWindow)
+        self.stackedWidget.addWidget(self.teacherWindow)
+        self.stackedWidget.setCurrentWidget(self.teacherWindow)
 
         self.show()
 

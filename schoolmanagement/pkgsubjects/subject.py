@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QWidget,QMainWindow,QApplication
-            ,QDialog,QStackedWidget,QListWidgetItem,QTableWidgetItem,QPushButton)
+            ,QDialog,QStackedWidget,QListWidgetItem,QTableWidgetItem,QPushButton,QVBoxLayout)
 from PyQt5.QtCore import pyqtSlot,QDateTime,Qt
 from PyQt5.QtGui import QPixmap
 import sys
@@ -7,6 +7,7 @@ from PyQt5.uic import loadUi
 import os
 
 from schoolmanagement.schoolmodels import database,Subject,Course
+from schoolmanagement.utils.utils import SubjectTableView
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -33,7 +34,7 @@ class SubjectMainWindow(QStackedWidget):
 
         self.subjectForm.cbo_part.addItems(self.part_list)
         self.subjectForm.cbo_course.addItems([x.name for x in self.course_list])
-        self.subjectForm.cbo_teacher.addItems([x.name for x in self.teacher_list])
+        self.subjectForm.cbo_teacher.addItems([x.first_name for x in self.teacher_list])
         self.subjectForm.cbo_class_room.addItems([x.name for x in self.classroom_list])
 
 
@@ -80,7 +81,10 @@ class SubjectMainWindow(QStackedWidget):
             self.subjectForm.txt_subject_name.setText("")
             self.subjectForm.lbl_response.setStyleSheet("QLabel {color:green;background-color:#e9ebff}")
 
+
+
             # Todo Here Add Subject
+            self.openingWidget.table.refresh_table(database.get_all_subject())
 
         else:
             self.subjectForm.lbl_response.setStyleSheet("QLabel {color:red;background-color:#e9ebff}")  
@@ -98,60 +102,12 @@ class SubjectMainWindow(QStackedWidget):
         def __init__(self):
             super().__init__()
             loadUi(os.path.join(dir_path,'layouts','opening.ui'),self)
-
-            self.refresh_table()
-
-        def refresh_table(self):
             self.subjectList = database.get_all_subject()
-            subjectCounter = len(self.subjectList)
-            colCounter =5
-            headers = ['Name','Part','Course','Teacher','Class Room']
-            self.tableWidget.setRowCount(subjectCounter)
-            self.tableWidget.setColumnCount(colCounter)
-            self.tableWidget.setHorizontalHeaderLabels(headers)
 
+            self.table = SubjectTableView()
+            self.table.refresh_table(self.subjectList)
+            self.verticalLayout.addWidget(self.table)
 
-
-            
-
-            for i in range(subjectCounter):
-                subject = self.subjectList[i]
-                self.tableWidget.setItem(i,0,QTableWidgetItem(subject.name))
-                self.tableWidget.setItem(i,1,QTableWidgetItem(subject.part))
-                self.tableWidget.setItem(i,2,QTableWidgetItem(subject.course.name))
-
-                if subject.teacher == None:
-                    self.teacher_button = QPushButton('Assign')
-                    self.teacher_button.setStyleSheet("QPushButton{color:white;background-color:blue;}QPushButton:hover{background-color: #5f99ef;}")
-                    self.teacher_button.setObjectName(str(i))
-                    self.teacher_button.clicked.connect(self.handle_teacher_button_click)
-                    self.tableWidget.setCellWidget(i,3,self.teacher_button)
-                else:
-                    self.tableWidget.setItem(i,3,QTableWidgetItem(subject.teacher.name))
-
-                if subject.classroom == None:
-                    self.classroom_button = QPushButton('Assign')
-                    self.classroom_button.setStyleSheet("QPushButton{color:white;background-color:blue;}QPushButton:hover{background-color: #5f99ef;}")
-                    self.classroom_button.clicked.connect(self.handle_classroom_button_click)
-                    self.tableWidget.setCellWidget(i,4,self.classroom_button)
-                else:
-                    self.tableWidget.setItem(i,3,QTableWidgetItem(subject.classroom.name))
-
-
-
-        
-
-        @pyqtSlot()
-        def handle_teacher_button_click(self):
-            button = self.sender()
-            subject = self.subjectList[int(button.objectName())]
-
-            print(subject.name)
-
-            
-
-        def handle_classroom_button_click(self):
-            pass
                     
             
                     

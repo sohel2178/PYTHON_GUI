@@ -7,6 +7,7 @@ from PyQt5.uic import loadUi
 import os
 
 from schoolmanagement.schoolmodels import database,Course
+from schoolmanagement.utils.utils import SubjectTableView
 
 
 
@@ -119,44 +120,49 @@ class CourseMainWindow(QStackedWidget):
             super().__init__()
             loadUi(os.path.join(dir_path,'layouts','detail.ui'),self)
 
-            
-
-
-        def refresh_table(self):
-            self.subjectList = self.course.subjects
-            subjectCounter = len(self.subjectList)
-            colCounter =5
-            headers = ['Name','Part','Course','Teacher','Class Room']
-            self.tableSubject.setRowCount(subjectCounter)
-            self.tableSubject.setColumnCount(colCounter)
-            self.tableSubject.setHorizontalHeaderLabels(headers)
-
-
+            self.subjectTableView = SubjectTableView()
+            self.tabWidget.addTab(self.subjectTableView,"Subject")
 
             
 
-            for i in range(subjectCounter):
-                subject = self.subjectList[i]
-                self.tableSubject.setItem(i,0,QTableWidgetItem(subject.name))
-                self.tableSubject.setItem(i,1,QTableWidgetItem(subject.part))
-                self.tableSubject.setItem(i,2,QTableWidgetItem(subject.course.name))
+            
 
-                if subject.teacher == None:
-                    self.teacher_button = QPushButton('Assign')
-                    self.teacher_button.setStyleSheet("QPushButton{color:white;background-color:blue;}QPushButton:hover{background-color: #5f99ef;}")
-                    self.teacher_button.setObjectName(str(i))
-                    # self.teacher_button.clicked.connect(self.handle_teacher_button_click)
-                    self.tableSubject.setCellWidget(i,3,self.teacher_button)
-                else:
-                    self.tableSubject.setItem(i,3,QTableWidgetItem(subject.teacher.name))
 
-                if subject.classroom == None:
-                    self.classroom_button = QPushButton('Assign')
-                    self.classroom_button.setStyleSheet("QPushButton{color:white;background-color:blue;}QPushButton:hover{background-color: #5f99ef;}")
-                    # self.classroom_button.clicked.connect(self.handle_classroom_button_click)
-                    self.tableSubject.setCellWidget(i,4,self.classroom_button)
-                else:
-                    self.tableSubject.setItem(i,3,QTableWidgetItem(subject.classroom.name))
+        # def refresh_table(self):
+        #     self.subjectList = self.course.subjects
+        #     subjectCounter = len(self.subjectList)
+        #     colCounter =5
+        #     headers = ['Name','Part','Course','Teacher','Class Room']
+        #     self.tableSubject.setRowCount(subjectCounter)
+        #     self.tableSubject.setColumnCount(colCounter)
+        #     self.tableSubject.setHorizontalHeaderLabels(headers)
+
+
+
+            
+
+        #     for i in range(subjectCounter):
+        #         subject = self.subjectList[i]
+        #         self.tableSubject.setItem(i,0,QTableWidgetItem(subject.name))
+        #         self.tableSubject.setItem(i,1,QTableWidgetItem(subject.part))
+        #         self.tableSubject.setItem(i,2,QTableWidgetItem(subject.course.name))
+
+        #         if subject.teacher == None:
+        #             self.teacher_button = QPushButton('Assign')
+        #             self.teacher_button.setStyleSheet("QPushButton{color:white;background-color:blue;}QPushButton:hover{background-color: #5f99ef;}")
+        #             self.teacher_button.setObjectName(str(i))
+        #             # self.teacher_button.clicked.connect(self.handle_teacher_button_click)
+        #             self.tableSubject.setCellWidget(i,3,self.teacher_button)
+        #         else:
+        #             self.tableSubject.setItem(i,3,QTableWidgetItem(subject.teacher.name))
+
+        #         if subject.classroom == None:
+        #             self.classroom_button = QPushButton('Assign')
+        #             self.classroom_button.setStyleSheet("QPushButton{color:white;background-color:blue;}QPushButton:hover{background-color: #5f99ef;}")
+        #             # self.classroom_button.clicked.connect(self.handle_classroom_button_click)
+        #             self.tableSubject.setCellWidget(i,4,self.classroom_button)
+        #         else:
+        #             self.tableSubject.setItem(i,3,QTableWidgetItem(subject.classroom.name))
 
 
         
@@ -165,7 +171,20 @@ class CourseMainWindow(QStackedWidget):
         def init_course(self,course):
             self.course = course
             self.lbl_course_name.setText(self.course.name)
-            self.refresh_table()
+            self.subjectList = self.course.subjects
+            self.subjectTableView.refresh_table(self.subjectList)
+
+            
+
+            # self.tab
+
+            # self.tabWidget
+
+            # self.refresh_table()
+            
+            # tv = self.tabSubject(SubjectTableView(self.subjectList),self)
+            # # self.tabSubject.move
+            # tv.move(10,10)
 
 
     
